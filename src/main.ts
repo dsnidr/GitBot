@@ -1,34 +1,31 @@
-import Discord, { TextChannel, Channel, RichEmbed, Message } from "discord.js";
+import { TextChannel, Message } from "discord.js";
 import bot from "./bot";
 import server from "./server";
 import keys from "./config/keys";
 
-import deleteMessages from "./bot/actions/deleteMessages";
+import handleCommand from "./bot/commands";
 
 bot.on("message", (message: Message) => {
-	if (message.content === "embed test") {
-		const embed = new Discord.RichEmbed();
-		embed.setTitle("Embed test");
-		embed.setColor("0xFF0000");
-		embed.setDescription("Hey! This is an embed.");
+	let messageString: string = message.content;
 
-		message.channel.send(embed);
-	} else if (message.content === "!channels") {
-		let availableChannels = "Here's the list of channels I have access to: \n\n";
+	// Check if the message received is a command
+	if (messageString.length < 2 || messageString.charAt(0) != "!") return;
 
-		bot.channels.forEach((channel: Channel) => {
-			availableChannels += channel.id + "\n";
-		});
+	// Strip the ! from the command string
+	messageString = messageString.substring(1, messageString.length);
 
-		const embed: RichEmbed = new RichEmbed();
-		embed.setTitle("Embed test");
-		embed.setColor("0xFF0000");
-		embed.setDescription(availableChannels);
+	const messageSplit = messageString.split(" ");
 
-		message.channel.send(embed);
-	} else if (message.content === "!clear") {
-		deleteMessages(message.channel);
+	const cmdString: string = messageSplit[0];
+	const cmdArgs: string[] = [];
+
+	// Add the arguments to the cmdArgs array
+	if (messageSplit.length > 1) {
+		messageSplit.forEach(arg => cmdArgs.push(arg));
 	}
+
+	// Run the command
+	handleCommand(cmdString, cmdArgs, message);
 });
 
 server.get("/send/:channel/:message", (req, res) => {
