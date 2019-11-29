@@ -1,3 +1,4 @@
+import request from "request";
 import { TextChannel, Message } from "discord.js";
 import bot from "./bot";
 import server from "./server";
@@ -28,37 +29,6 @@ bot.on("message", (message: Message) => {
 	handleCommand(cmdString, cmdArgs, message);
 });
 
-server.get("/send/:channel/:message", (req, res) => {
-	const channel: TextChannel = bot.channels.get(req.params.channel) as TextChannel;
-
-	if (!channel) {
-		res.status(400).json({
-			success: false,
-			body: {
-				message: "Invalid channel ID specified"
-			}
-		});
-	}
-
-	if (!(channel instanceof TextChannel)) {
-		res.status(400).json({
-			success: false,
-			body: {
-				message: "The channel specified was not a text channel"
-			}
-		});
-	}
-
-	channel.send(req.params.message);
-
-	res.status(200).json({
-		success: true,
-		body: {
-			message: "Message sent"
-		}
-	});
-});
-
 // Webhook receiver
 server.post("/webhook", (req, res) => {
 	console.log(req.body);
@@ -66,6 +36,12 @@ server.post("/webhook", (req, res) => {
 	res.status(200).json({
 		success: true
 	});
+});
+
+server.get("/auth/github", (req, res) => {
+	res.redirect(
+		"https://github.com/login/oauth/authorize?scope=user:email,repo&client_id=8fdcfab56fa6a2e85fad&state=deifx372eyd7eduiebngukjyen287h"
+	);
 });
 
 server.listen(8080, () => console.log("Server listening on port 8080"));
