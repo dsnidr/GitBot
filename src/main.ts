@@ -22,7 +22,11 @@ bot.on("message", (message: Message) => {
 
 	// Add the arguments to the cmdArgs array
 	if (messageSplit.length > 1) {
-		messageSplit.forEach(arg => cmdArgs.push(arg));
+		messageSplit.forEach((arg, index) => {
+			if (index === 0) return;
+
+			cmdArgs.push(arg);
+		});
 	}
 
 	// Run the command
@@ -40,7 +44,31 @@ server.post("/webhook", (req, res) => {
 
 server.get("/auth/github", (req, res) => {
 	res.redirect(
-		"https://github.com/login/oauth/authorize?scope=user:email,repo&client_id=8fdcfab56fa6a2e85fad&state=deifx372eyd7eduiebngukjyen287h"
+		`https://github.com/login/oauth/authorize?scope=user:email,repo&client_id=${keys.GITHUB_CLIENT_ID}`
+	);
+});
+
+server.get("/auth/github/callback", (req, res) => {
+	request(
+		{
+			uri: "https://github.com/login/oauth/access_token",
+			method: "POST",
+			form: {
+				client_id: keys.GITHUB_CLIENT_ID,
+				client_secret: keys.GITHUB_CLIENT_SECRET,
+				code: req.query.code
+			},
+			headers: {
+				accept: "application/json"
+			}
+		},
+		(err, r, b) => {
+			const body = JSON.parse(b);
+
+			// TODO: Store access token somehow
+
+			res.redirect("discord://");
+		}
 	);
 });
 

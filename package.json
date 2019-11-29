@@ -18,7 +18,8 @@
 		"express-rate-limit": "^5.0.0",
 		"request": "^2.88.0",
 		"tslint": "^5.20.1",
-		"typescript": "^3.7.2"
+		"typescript": "^3.7.2",
+		"validator": "^12.1.0"
 	},
 	"devDependencies": {
 		"nodemon": "^2.0.1"
