@@ -1,12 +1,35 @@
 import { Message, RichEmbed, TextChannel } from "discord.js";
 import isGitHubUrl from "../../helpers/isGitHubUrl";
+import { IAuthState } from "../../interfaces";
+import { getWebhookByChannel } from "../../database/webhook";
 
-export default (message: Message, args: string[]): void => {
+// TODO: Logging
+
+export default async (message: Message, args: string[]): Promise<void> => {
 	// We don't want to handle this command unless it was used within a server.
 	if ((message.channel as TextChannel).guild == null) return;
 
 	if (args.length !== 1) {
 		error(message);
+		return;
+	}
+
+	const repoUrl: string = args[0];
+
+	if (!isGitHubUrl(repoUrl)) {
+		error(message);
+		return;
+	}
+
+	// Ensure that this channel isn't already subscribed to a repository
+	const existingWebhook = await getWebhookByChannel(message.channel.id);
+	if (existingWebhook) {
+		const embed: RichEmbed = new RichEmbed();
+		embed.setTitle("Error");
+		embed.setDescription("This channel is already subscribed to a repository");
+		embed.setColor("#ff0000");
+		message.reply(embed);
+
 		return;
 	}
 
@@ -16,15 +39,16 @@ export default (message: Message, args: string[]): void => {
 	successEmbed.setColor("#00FF00");
 	message.reply(successEmbed);
 
-	const repoUrl: string = args[0];
+	const authState: IAuthState = {
+		repoUrl,
+		guildId: message.guild.id,
+		channelId: message.channel.id
+	};
 
-	if (!isGitHubUrl(repoUrl)) {
-		error(message);
-		return;
-	}
+	const encodedState: string = Buffer.from(JSON.stringify(authState), "ascii").toString("base64");
 
 	message.author.send(`Please visit the following page to authenticate yourself: \
-	\n\nhttp://localhost:8080/auth/github?repo=${new Buffer(args[0]).toString("base64")} \
+	\n\nhttp://localhost:8080/auth/github?state=${encodedState} \
 	\n\nThis is an OAuth login process done through GitHub. We never have access to your login credentials. \
 	\nTo learn more about how OAuth works, check out https://oauth.net`);
 };

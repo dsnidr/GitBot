@@ -1,6 +1,7 @@
 import request from "request";
+import { insertWebhook } from "../database/webhook";
 
-export default (repoUrl: string, accessToken: string, secret: string) => {
+export default (repoUrl: string, accessToken: string, secret: string): Promise<number> => {
 	return new Promise((resolve, reject) => {
 		const splitRepoUrl = repoUrl.split("/");
 		const userRepoSection = splitRepoUrl[3] + "/" + splitRepoUrl[4];
@@ -27,32 +28,7 @@ export default (repoUrl: string, accessToken: string, secret: string) => {
 				}
 			},
 			(err, res, b) => {
-				if (err) {
-					return resolve(`
-					<html>
-						<body>
-							<h1>Something went wrong</h1>
-						</body>
-					</html>`);
-				}
-
-				if (res.statusCode === 404) {
-					return resolve(`
-					<html>
-						<body>
-							<h1>That repo could not be found</h1>
-						</body>
-					</html>`);
-				}
-
-				const body = JSON.parse(b);
-
-				return resolve(`
-					<html>
-						<body>
-							<h1>Webhook created</h1>
-						</body>
-					</html>`);
+				resolve(res.statusCode);
 			}
 		);
 	});

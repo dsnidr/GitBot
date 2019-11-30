@@ -7,10 +7,12 @@ import keys from "./config/keys";
 import isGitHubUrl from "./helpers/isGitHubUrl";
 import createWebhook from "./helpers/createWebhook";
 import handleCommand from "./bot/commands";
-import { insertWebhook } from "./database/webhook";
-import IAuthState from "./interfaces/IAuthState";
+import { insertWebhook, getWebhookByUrl } from "./database/webhook";
+import { IAuthState } from "./interfaces";
 
-bot.on("message", (message: Message) => {
+// TODO: Logging
+
+bot.on("message", async (message: Message) => {
 	let messageString: string = message.content;
 
 	// Check if the message received is a command
@@ -38,11 +40,19 @@ bot.on("message", (message: Message) => {
 });
 
 // Webhook receiver
-server.post("/webhook", (req, res) => {
+server.post("/webhook", async (req, res) => {
 	const body = req.body;
 
+	// Get the webhook data from the database
+	const webhook = await getWebhookByUrl(body.repository.html_url);
+
+	// If the webhook doesn't exist, this is an invalid request so we drop it.
+	if (!webhook) {
+		return;
+	}
+
 	// If no payload was provided, drop the request.
-	/*if (!body) {
+	if (!body) {
 		return;
 	}
 
@@ -55,12 +65,9 @@ server.post("/webhook", (req, res) => {
 		return;
 	}
 
-	// TODO: Get stored secret from database
-	const storedSecret: string = undefined;
-
 	// Generate our own hash to compare to the one provided by GitHub
 	let hash = crypto
-		.createHmac("sha1", storedSecret)
+		.createHmac("sha1", webhook.Secret)
 		.update(JSON.stringify(body))
 		.digest("hex");
 	hash = "sha1=" + hash;
@@ -70,7 +77,7 @@ server.post("/webhook", (req, res) => {
 	// If an invalid hash was provided, drop the request.
 	if (!hashesMatch) {
 		return;
-	}*/
+	}
 
 	res.status(200).json({
 		success: true
@@ -172,15 +179,8 @@ server.get("/auth/github/callback", (req, res) => {
 			// Generate a pseudo random secret key for the webhook
 			const secret = crypto.randomBytes(20).toString("hex");
 
-			////////////////////////////////////////////////////
-			// TODO: This secret MUST be stored in a database //
-			////////////////////////////////////////////////////
-
+			// Store this new webhook in the database
 			const statusCode = await createWebhook(state.repoUrl, body.access_token, secret);
-
-			if (statusCode === 201) {
-				// Database?
-			}
 
 			// TODO: Create actual templates so we don't need to use these ugly html literal strings
 
@@ -207,12 +207,27 @@ server.get("/auth/github/callback", (req, res) => {
 
 			// Otherwise, everything was successful
 			else {
-				return res.send(`
-				<html>
-					<body>
-						<h1>Webhook Created</h1>
-					</body>
-				</html>`);
+				insertWebhook(state.guildId, state.channelId, state.repoUrl, secret)
+					.then(() => {
+						return res.send(`
+								<html>
+									<body>
+										<h1>Webhook Created</h1>
+									</body>
+								</html>`);
+					})
+					.catch(err => {
+						// TODO: Send a delete request to remove the webhook we just created.
+
+						console.log(err);
+						return res.send(`
+					<html>
+						<body>
+							<h1>Something went wrong</h1>
+							<p>We tried and tried but we couldn't create your webhook. Please try again later</p>
+						</body>
+					</html>`);
+					});
 			}
 		}
 	);
