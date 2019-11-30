@@ -1,27 +1,32 @@
-import { Message, RichEmbed } from "discord.js";
-import { isURL } from "validator";
+import { Message, RichEmbed, TextChannel } from "discord.js";
+import isGitHubUrl from "../../helpers/isGitHubUrl";
 
 export default (message: Message, args: string[]): void => {
+	// We don't want to handle this command unless it was used within a server.
+	if ((message.channel as TextChannel).guild == null) return;
+
 	if (args.length !== 1) {
 		error(message);
 		return;
 	}
 
-	const repoURI: string = args[0];
+	const successEmbed = new RichEmbed();
+	successEmbed.setTitle("Request Received");
+	successEmbed.setDescription("I've sent you some instructions. Please check your DMs");
+	successEmbed.setColor("#00FF00");
+	message.reply(successEmbed);
 
-	if (!isURL(repoURI)) {
+	const repoUrl: string = args[0];
+
+	if (!isGitHubUrl(repoUrl)) {
 		error(message);
 		return;
 	}
 
-	message.author.sendMessage(
-		`Please visit the following page to authenticate yourself:
-
-		http://localhost:8080/auth/github
-
-This is an OAuth login process done through GitHub. To learn more about
-how this works, check out https://oauth.net`
-	);
+	message.author.send(`Please visit the following page to authenticate yourself: \
+	\n\nhttp://localhost:8080/auth/github?repo=${new Buffer(args[0]).toString("base64")} \
+	\n\nThis is an OAuth login process done through GitHub. We never have access to your login credentials. \
+	\nTo learn more about how OAuth works, check out https://oauth.net`);
 };
 
 const error = (message: Message) => {
