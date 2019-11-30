@@ -6,9 +6,9 @@ import server from "./server";
 import keys from "./config/keys";
 import isGitHubUrl from "./helpers/isGitHubUrl";
 import createWebhook from "./helpers/createWebhook";
-
 import handleCommand from "./bot/commands";
 import { insertWebhook } from "./database/webhook";
+import IAuthState from "./interfaces/IAuthState";
 
 bot.on("message", (message: Message) => {
 	let messageString: string = message.content;
@@ -77,20 +77,14 @@ server.post("/webhook", (req, res) => {
 	});
 });
 
-interface RepoState {
-	repoUrl: string;
-	guildId: string;
-	channelId: string;
-}
-
 server.get("/auth/github", (req, res) => {
 	const encodedState: string = req.query.state;
 	const decodedState = Buffer.from(encodedState, "base64").toString("ascii");
 
-	let state: RepoState = undefined;
+	let state: IAuthState = undefined;
 
 	try {
-		state = JSON.parse(decodedState) as RepoState;
+		state = JSON.parse(decodedState) as IAuthState;
 	} catch (e) {
 		return res.send(`
 		<!DOCTYTPE html>
@@ -120,7 +114,7 @@ server.get("/auth/github", (req, res) => {
 	}
 
 	res.redirect(
-		`https://github.com/login/oauth/authorize?scope=user:email,repo&client_id=${keys.GITHUB_CLIENT_ID}&state=${state.repoUrl}`
+		`https://github.com/login/oauth/authorize?scope=user:email,repo&client_id=${keys.GITHUB_CLIENT_ID}&state=${encodedState}`
 	);
 });
 
@@ -131,10 +125,10 @@ server.get("/auth/github/callback", (req, res) => {
 
 	const decodedState = Buffer.from(encodedState, "base64").toString("ascii");
 
-	let state: RepoState = undefined;
+	let state: IAuthState = undefined;
 
 	try {
-		state = JSON.parse(decodedState) as RepoState;
+		state = JSON.parse(decodedState) as IAuthState;
 	} catch (e) {
 		return res.send(`
 		<!DOCTYTPE html>
@@ -185,6 +179,7 @@ server.get("/auth/github/callback", (req, res) => {
 			const statusCode = await createWebhook(state.repoUrl, body.access_token, secret);
 
 			if (statusCode === 201) {
+				// Database?
 			}
 
 			// TODO: Create actual templates so we don't need to use these ugly html literal strings
