@@ -1,6 +1,6 @@
 {
 	"watch": ["src"],
-	"ext": "ts",
+	"ext": "ts ejs scss",
 	"ignore": ["src/**/*.spec.ts"],
-	"exec": "tsc && node ./dist/main"
+	"exec": "tsc && copyfiles -u 1 src/**/*.ejs dist/ && node-sass src/scss/index.scss dist/public/css/style.css && node ./dist/main"
 }
