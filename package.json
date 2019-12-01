@@ -24,6 +24,7 @@
 	},
 	"devDependencies": {
 		"@types/mysql2": "github:types/mysql2",
+		"jest": "^24.9.0",
 		"nodemon": "^2.0.1"
 	}
 }
