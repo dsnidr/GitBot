@@ -1,6 +1,10 @@
 import { Router } from "express";
 import { getWebhookByUrl } from "../../database/webhook";
 import crypto from "crypto";
+import bot from "../../bot";
+import { TextChannel, RichEmbed } from "discord.js";
+import { brotliCompress } from "zlib";
+import { booleanLiteral } from "@babel/types";
 
 const router = Router();
 
@@ -43,7 +47,19 @@ router.post("/", async (req, res) => {
 		return;
 	}
 
-	res.status(200).json({
+	// Since we only allow subscriptions to TextChannels, we can be sure that this is a text channel.
+	const channel: TextChannel = bot.channels.get(webhook.ChannelID) as TextChannel;
+
+	// TODO: Determine the proper message and color to send from the webhook data
+
+	const embed = new RichEmbed();
+	embed.setTitle("Received data");
+	embed.setDescription("Repo: " + webhook.RepoURL);
+	embed.setColor("#00ffff");
+
+	channel.send(embed);
+
+	return res.status(200).json({
 		success: true
 	});
 });
