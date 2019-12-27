@@ -1,0 +1,39 @@
+header.header {
+	height: 50vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+
+	.title-box {
+		text-align: center;
+	}
+}
+
+section.features {
+	background-color: $color-primary-dark;
+	display: flex;
+	width: 60%;
+	margin: auto;
+	margin-top: 5rem;
+	padding: 2rem;
+	border-radius: 1rem;
+
+	display: flex;
+	flex-direction: column;
+
+	.heading--primary {
+		flex: 1;
+	}
+}
+
+// Responsive designs
+@media only screen and (max-width: 768px) {
+	section.features {
+		width: 90%;
+
+		.heading--primary {
+			margin: 0;
+		}
+	}
+}

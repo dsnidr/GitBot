@@ -1,5 +1,6 @@
 import Discord, { Guild, Channel } from "discord.js";
 import { insertGuild, deleteGuild } from "../database/guild";
+import { deleteWebhook, deleteWebhookByGuildId, deleteWebhookByChannelId } from "../database/webhook";
 
 const client = new Discord.Client();
 
@@ -13,12 +14,14 @@ client.on("guildCreate", (guild: Guild) => {
 });
 
 client.on("guildDelete", (guild: Guild) => {
-	// Remove guild from the database
+	// Remove guild from the database and all webhooks associated with it
+	deleteWebhookByGuildId(guild.id);
 	deleteGuild(guild.id);
 });
 
 client.on("channelDelete", (channel: Channel) => {
-	// TODO: Ensure that any subscriptions for this channel are deleted. (i.e webhooks, database rows, etc)
+	// Remove all webhooks associated with the deleted channel
+	deleteWebhookByChannelId(channel.id);
 });
 
 export default client;

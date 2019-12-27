@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css?family=Fira+Sans:300,400,600&display=swap");
+
 *,
 *::before,
 *::after {
@@ -12,4 +14,6 @@ html {
 
 body {
 	box-sizing: border-box;
+	font-family: "Fira Sans", sans-serif;
+	background-color: $color-primary;
 }

@@ -39,5 +39,5 @@ bot.on("message", async (message: Message) => {
 	handleCommand(cmdString, cmdArgs, message);
 });
 
-server.listen(8080, () => console.log("Server listening on port 8080"));
+server.listen(keys.SERVER_PORT, () => console.log("Server listening on port 8080"));
 bot.login(keys.BOT_TOKEN);

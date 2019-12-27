@@ -1,0 +1,19 @@
+.feature-list {
+	display: flex;
+	list-style: inside;
+	color: $color-text-dark;
+	font-size: 1.6rem;
+
+	display: flex;
+	flex-direction: column;
+
+	&__item {
+		margin-top: 1.5rem;
+	}
+
+	&__header {
+		font-size: 1.8rem;
+		font-weight: 600;
+		margin-bottom: 0.2rem;
+	}
+}

@@ -1,5 +1,54 @@
 <%- include('partials/header'); -%>
 
-<h1>Home</h1>
+<header class="header">
+	<div class="title-box">
+		<h1 class="heading--title text--light">Introducing GitBot</h1>
+		<h2 class="heading--primary text--light">Automatic GitHub repository status updates in Discord</h2>
+	</div>
+
+	<a
+		class="button button--large"
+		href="https://discordapp.com/api/oauth2/authorize?client_id=649459262526980098&permissions=2048&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fadd%2Fsuccess&scope=bot"
+		>Add GitBot to your server
+	</a>
+</header>
+
+<section class="features">
+	<h1 class="heading--primary text--light">Current Features</h1>
+	<div class="feature-list">
+		<div class="feature-list__item">
+			<div class="feature-list__header">Repository Subscription</div>
+			<div class="feature-list__body">
+				With GitBot, you can subscribe a Discord channel to a GitHub repository that you own.
+			</div>
+		</div>
+		<div class="feature-list__item">
+			<div class="feature-list__header">Automatic Notifications</div>
+			<div class="feature-list__body">
+				When a collaborator pushes new commits or opens/closes a pull request, a message gets automatically sent
+				to any Discord channel subscribed to the target repository.
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="features">
+	<h1 class="heading--primary text--light">Planned Features</h1>
+	<div class="feature-list">
+		<div class="feature-list__item">
+			<div class="feature-list__header">Account Synchronization</div>
+			<div class="feature-list__body">
+				In the future, GitBot will allow you to sync your Discord account with your GitBot account.
+			</div>
+		</div>
+		<div class="feature-list__item">
+			<div class="feature-list__header">Account Lookup</div>
+			<div class="feature-list__body">
+				Once account synchronization is implemented, you will be able to use GitBot to find a Discord user's
+				GitHub account and vice versa.
+			</div>
+		</div>
+	</div>
+</section>
 
 <%- include('partials/footer'); -%>
