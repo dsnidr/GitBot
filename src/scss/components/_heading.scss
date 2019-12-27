@@ -1,0 +1,28 @@
+.heading {
+	&--title {
+		font-size: 7.2rem;
+		font-weight: 400;
+	}
+
+	&--primary {
+		font-size: 3rem;
+		font-weight: 300;
+	}
+}
+
+@media only screen and (max-width: 768px) {
+	.heading {
+		&--title {
+			font-size: 4rem;
+			font-weight: 400;
+		}
+
+		&--primary {
+			font-size: 2.5rem;
+			font-weight: 300;
+			max-width: 80%;
+			margin-left: auto;
+			margin-right: auto;
+		}
+	}
+}
