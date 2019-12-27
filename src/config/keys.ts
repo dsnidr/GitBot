@@ -9,5 +9,6 @@ export default {
 		USER: "root",
 		PASSWORD: "rootPassword*2019",
 		DATABASE: "GitBot"
-	}
+	},
+	test: ""
 };
