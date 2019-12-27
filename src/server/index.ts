@@ -4,6 +4,7 @@ import rateLimit from "express-rate-limit";
 import path from "path";
 import authRouter from "./routes/auth";
 import webhookRouter from "./routes/webhook";
+import keys from "../config/keys";
 
 const server = express();
 
@@ -28,7 +29,9 @@ server.use("/webhook", webhookRouter);
 
 // Root route
 server.get("/", (req, res) => {
-	res.render("home");
+	res.render("home", {
+		client_id: keys.DISCORD_CLIENT_ID
+	});
 });
 
 export default server;
