@@ -29,3 +29,27 @@ Once this is determined and the message is constructed, GitBot sends it to the c
 When GitBot creates a Webhook, a secret hash is generated and stored in GitBot's database. Then, anytime a payload is received
 from a webhook, we pull up the stored secret and make sure it matches the one provided by GitHub.
 This ensures that webhook payloads are not tampered with, and provides an additional layer of security to the end user.
+
+# Setup
+
+GitBot requires a `keys.ts` file to be present in the `src/config` folder. This contains config options and keys that GitBot needs to run.
+
+An example `keys.ts` file is below:
+
+```
+export default {
+	SERVER_PORT: 8080,
+	GITHUB_CALLBACK_HOST: "123.123.123.123",
+	DISCORD_CLIENT_ID: "DISCORD_CLIENT_ID_HERE",
+	BOT_TOKEN: "BOT_TOKEN_HERE",
+	GITHUB_CLIENT_ID: "GITHUB_CLIENT_ID_HERE",
+	GITHUB_CLIENT_SECRET: "GITHUB_CLIENT_SECRET_HERE",
+	MYSQL: {
+		HOST: "localhost",
+		USER: "USER_HERE",
+		PASSWORD: "PASSWORD_HERE",
+		DATABASE: "GitBot"
+	}
+};
+
+```
