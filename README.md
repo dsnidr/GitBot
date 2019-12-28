@@ -36,7 +36,7 @@ GitBot requires a `keys.ts` file to be present in the `src/config` folder. This 
 
 An example `keys.ts` file is below:
 
-```
+```javascript
 export default {
 	SERVER_PORT: 8080,
 	GITHUB_CALLBACK_HOST: "123.123.123.123",
