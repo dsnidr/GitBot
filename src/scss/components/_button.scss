@@ -2,11 +2,11 @@
 	color: $color-text-light;
 	background-color: $color-button;
 	text-decoration: none;
+	border: 1px solid darken($color-button, 5%);
 
 	&:hover {
 		cursor: pointer;
 		background-color: lighten($color-button, 1%);
-		margin-top: 0.2rem;
 	}
 }
 
@@ -14,6 +14,12 @@
 	&--large {
 		font-size: 2.2rem;
 		padding: 2rem 4rem;
+		border-radius: 1rem;
+	}
+
+	&--normal {
+		font-size: 1.8rem;
+		padding: 1.4rem 3.4rem;
 		border-radius: 1rem;
 	}
 }

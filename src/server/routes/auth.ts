@@ -21,8 +21,7 @@ router.get("/github", (req, res) => {
 		return res.render("auth", {
 			header: "Something went wrong",
 			messages: [
-				"We were unable to properly process your request.",
-				"If you believe this is a mistake, please retry."
+				"We were unable to properly process your request. If you believe this is a mistake, please retry."
 			]
 		});
 	}
@@ -35,8 +34,7 @@ router.get("/github", (req, res) => {
 		return res.render("auth", {
 			header: "Something went wrong",
 			messages: [
-				"We were unable to properly process your request.",
-				"If you believe this is a mistake, please retry."
+				"We were unable to properly process your request. If you believe this is a mistake, please retry."
 			]
 		});
 	}
@@ -61,8 +59,7 @@ router.get("/github/callback", (req, res) => {
 		return res.render("auth", {
 			header: "Something went wrong",
 			messages: [
-				"We were unable to properly process your request.",
-				"If you believe this is a mistake, please retry."
+				"We were unable to properly process your request. If you believe this is a mistake, please retry."
 			]
 		});
 	}
@@ -71,8 +68,7 @@ router.get("/github/callback", (req, res) => {
 		return res.render("auth", {
 			header: "Something went wrong",
 			messages: [
-				"We were unable to properly process your request.",
-				"If you believe this is a mistake, please retry."
+				"We were unable to properly process your request. If you believe this is a mistake, please retry."
 			]
 		});
 	}
