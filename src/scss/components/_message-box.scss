@@ -1,0 +1,46 @@
+.message-box {
+	width: 100vw;
+	height: 100vh;
+	background-image: linear-gradient(to bottom right, $color-discord, $color-discord-dark);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	&__content {
+		width: 35%;
+		height: auto;
+		padding-bottom: 3rem;
+		background-color: rgba($color-primary, 0.9);
+		text-align: center;
+		border-radius: 1rem;
+		border: 1px solid $color-primary-dark;
+	}
+
+	&__header {
+		font-size: 4rem;
+		padding: 2rem;
+		text-transform: uppercase;
+		border-bottom: 1px solid $color-primary-light;
+	}
+
+	&__message {
+		font-size: 2rem;
+		line-height: 2.6rem;
+		padding: 2rem 4rem;
+		font-weight: 300;
+		// text-align: justify;
+	}
+}
+
+@media only screen and (max-width: 1000px) {
+	.message-box {
+		&__content {
+			width: 96%;
+			min-height: 96%;
+		}
+
+		&__message {
+			text-align: center;
+		}
+	}
+}

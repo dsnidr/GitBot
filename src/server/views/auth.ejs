@@ -1,5 +1,13 @@
-<h1><%= header %></h1>
+<%- include('partials/header'); -%>
 
-<% for (var i = 0; i < messages.length; i++) { %>
-	<p><%= messages[i] %></p>
-<% } %>
+<div class="message-box">
+	<div class="message-box__content">
+		<h1 class="message-box__header heading--primary text--light"><%= header %></h1>
+
+		<p class="message-box__message text--light">
+			<% for (var i = 0; i < messages.length; i++) { %> <%= messages[i] %> <% } %>
+		</p>
+	</div>
+</div>
+
+<%- include('partials/footer'); -%>
